@@ -1,0 +1,15 @@
+newmtl blinn1SG
+illum 4
+Kd 0.50 0.50 0.80
+Ka 0.52 0.09 0.03
+Tf 0.50 0.50 0.50
+map_Kd olds.bmp
+Ni 0.50
+Ks 0.50 0.50 0.50
+newmtl pasted__blinn1SG
+illum 4
+Kd 0.0 0.4 0.0
+Ka 0.00 0.30 0.20
+Tf 0.50 0.50 0.50
+Ni 0.5
+Ks 0.50 0.50 0.50
