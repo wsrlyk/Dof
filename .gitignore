@@ -12,6 +12,6 @@
 *.la
 *.a
 
-dev\Debug
-dev\ipch
+dev/Debug/
+dev/ipch/
 *.sdf
