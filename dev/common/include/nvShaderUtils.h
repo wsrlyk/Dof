@@ -44,6 +44,7 @@ inline GLuint CompileGLSLShader( GLenum target, const char* shader)
         char temp[11256] = "";
         glGetShaderInfoLog( object, 11256, NULL, temp);
         fprintf( stderr, "Compile failed:\n%s\n", temp);
+		printf( "Compile failed:\n%s\n", temp);
 #endif
         glDeleteShader( object);
         return 0;

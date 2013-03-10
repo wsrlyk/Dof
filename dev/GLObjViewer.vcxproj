@@ -135,6 +135,7 @@
     <None Include="Content\Shaders\fp_coc_common.glsl" />
     <None Include="Content\Shaders\fp_common_variables.glsl" />
     <None Include="Content\Shaders\fp_final_fragment.glsl" />
+    <None Include="Content\Shaders\fp_final_fragment_new.glsl" />
     <None Include="Content\Shaders\fp_final_vertex.glsl" />
     <None Include="Content\Shaders\fp_init_fragment.glsl" />
     <None Include="Content\Shaders\fp_init_vertex.glsl" />

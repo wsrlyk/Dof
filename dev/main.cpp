@@ -1440,7 +1440,7 @@ void BuildShaders()
 
 	g_shaderFrontFinal.attachVertexShader(SHADER_PATH "fp_final_vertex.glsl");
 	g_shaderFrontFinal.attachFragmentShader(SHADER_PATH "fp_common_variables.glsl");
-	g_shaderFrontFinal.attachFragmentShader(SHADER_PATH "fp_final_fragment.glsl");
+	g_shaderFrontFinal.attachFragmentShader(SHADER_PATH "fp_final_fragment_new.glsl");
 //	g_shaderFrontFinal.attachFragmentShader(SHADER_PATH "fp_filters_fragment.glsl");
 	g_shaderFrontFinal.link();
 
