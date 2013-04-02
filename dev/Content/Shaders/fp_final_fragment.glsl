@@ -46,7 +46,7 @@ void main(void)
 //	  return;
    if(DCoC <= ClearCoc)
    {
-      gl_FragColor =  /*vec4(DCoC* 0.25, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
+      gl_FragColor =  vec4(DCoC* 0.25, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
    }
    //else if(DCoC > MaxOutputDCoC)
    //{
@@ -57,7 +57,7 @@ void main(void)
 //   #if 0
 
   if(depth > fd)
-      gl_FragColor =  BackBlur(DCoC, fd, 15, DCoC, depth);
+      gl_FragColor =  vec4(DCoC* 0.25, 0.25, 0.75,0);//*/BackBlur(DCoC, fd, 15, DCoC, depth);
   else
       gl_FragColor =  FrontBlur(DCoC, fd, 15);
 	  }
@@ -373,14 +373,14 @@ vec4 BackBlur(int KernelDiameter, float focusDist, float sigmaD, float myCoc, fl
 				if( curCoC <= myCoc){
 					squareDistance = col * col + row * row;
 					if(squareDistance > curCoC * curCoC * 0.5){
-						continue;
+				//		continue;
 					}
 				}
 				////calculate kernel
 				x = (float(col) + offset) / KernelDiameter * range;
 				y = (float(row) + offset) / KernelDiameter * range;
 				kernelValue = exp(-(x*x + y*y)/(2*sigmaD*sigmaD));
-
+				kernelValue = 1;
 				sum += kernelValue;
 
 				//Convolution

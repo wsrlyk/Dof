@@ -54,7 +54,7 @@ void main(void)
 
 	for(int col=-halfCoc; col <= halfCoc; col+=1)
 	{
-		for(int row=-halfCoc; row < halfCoc; row+=1)
+		for(int row=-halfCoc; row <= halfCoc; row+=1)
 		{
 			tmpX = clamp(gl_FragCoord.x+col,0.5,width - 0.5);
 			tmpY = clamp(gl_FragCoord.y+row,0.5,height - 0.5);
@@ -65,7 +65,7 @@ void main(void)
 			tempDepth = int(CocAndDepth.g);
 
 			int l = 1;
-			if((abs(col) * 2> tempCoc) || (abs(row) * 2 > tempCoc))
+			if((abs(col) * 2>= tempCoc) || (abs(row) * 2 > tempCoc))
 				l = 0;
 
 			vec4 color4 = textureRect(scene, tmpXY);
@@ -112,12 +112,12 @@ void main(void)
 			k = 1.0 - k / k;
 				colorSumFore[9] += k * l *color4;
 				pointAmountFore[9] += k * l;
-			k = abs(10.0 - tempCoc);
-			k = 1.0 - k / k;
+			k = abs(10 - tempCoc);
+				k = 1 - clamp(k, 0, 1);
 				colorSumFore[10] += k * l *color4;
 				pointAmountFore[10] += k * l;
-			k = abs(11.0 - tempCoc);
-			k = 1.0 - k / k;
+			k = abs(11 - tempCoc);
+				k = 1 - clamp(k, 0, 1);
 				colorSumFore[11] += k * l *color4;
 				pointAmountFore[11] += k * l;
 
@@ -174,7 +174,7 @@ void main(void)
 				colorSumBack[10] += k * l *color4;
 				pointAmountBack[10] += k * l;
 			k = abs(11.0 - tempCoc);
-			k = 1.0 - k / k;
+			k = 1.0 - (k / k);
 				colorSumBack[11] += k * l *color4;
 				pointAmountBack[11] += k * l;
 			}
@@ -202,9 +202,9 @@ void main(void)
 	colorResultFore[9].rgb = colorSumFore[9].rgb / pointAmountFore[9];
 	colorResultFore[9].a = colorSumFore[9].a / (9 * 9);
 	colorResultFore[10].rgb = colorSumFore[10].rgb / pointAmountFore[10];
-	colorResultFore[10].a = colorSumFore[10].a / (10 * 10);
+	colorResultFore[10].a = pointAmountFore[10] / (10.0 * 10.0);
 	colorResultFore[11].rgb = colorSumFore[11].rgb / pointAmountFore[11];
-	colorResultFore[11].a = colorSumFore[11].a / (11 * 11);
+	colorResultFore[11].a = pointAmountFore[11] / (11.0 * 11.0);
 
 	colorResultBack[0].rgb = colorSumBack[0].rgb / pointAmountBack[0];
 	colorResultBack[0].a = colorSumBack[0].a / (0 * 0);
@@ -231,24 +231,92 @@ void main(void)
 	colorResultBack[11].rgb = colorSumBack[11].rgb / pointAmountBack[11];
 	colorResultBack[11].a = colorSumBack[11].a / (11 * 11);
 
-	gl_FragColor = colorResultFore[11];//textureRect(scene, gl_FragCoord);
-	return;
+//	gl_FragColor = colorResultFore[11];//textureRect(scene, gl_FragCoord);
+//	return;
 
 
 	vec4 blendColor0;
-	vec4 blendColor1 = colorResultFore[maxCoc];
-	for(int i = maxCoc - 1; i >= 0; --i)
-	{
-		blendColor0 = blendColor1;
-		blendColor1.a = blendColor0.a + colorResultFore[i].a - colorResultFore[i].a * blendColor0.a;
-		blendColor1.rgb = blendColor0.rgb + (colorResultFore[i].rgb - blendColor0.rgb) * colorResultFore[i].a / blendColor1.a;
-	}
-	for(int i = 1; i <= maxCoc; ++i)
-	{
-		blendColor0 = blendColor1;
-		blendColor1.a = blendColor0.a + colorResultBack[i].a - colorResultBack[i].a * blendColor0.a;
-		blendColor1.rgb = blendColor0.rgb + (colorResultBack[i].rgb - blendColor0.rgb) * colorResultBack[i].a / blendColor1.a;
-	}
+	vec4 blendColor1;// = colorResultFore[11];
 
-	gl_FragColor = blendColor1;
+	vec4 temp1;
+	vec4 temp2;
+	temp1 = vec4(colorResultFore[11].r, colorResultFore[11].g, colorResultFore[11].b, 1);
+	temp2 = vec4(0, 0, colorResultFore[10].b, 1);
+//	blendColor0 = blendColor1;
+//	blendColor1.rgb =mix(vec3(1.0, 1.0, 1.0), vec3(0.0, 0.0, 0.0), 0.5);
+//	blendColor1.rgb = mix(colorResultFore[11].rgb, colorResultFore[11].rgb, 0.5);
+	blendColor1.rgba = mix(temp1, temp2, 0.5);
+//	blendColor1.a = 1;// = colorResultFore[11].a + colorResultFore[10].a - colorResultFore[10].a * colorResultFore[11].a;
+//	blendColor1.rgb = colorResultFore[11].rgb ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
+	gl_FragColor = vec4(blendColor1.rgb * blendColor1.a, 1.0);
+//	if(blendColor1.a >1)
+//		gl_FragColor = vec4(1.0, 0, 0, 1);
+//	gl_FragColor = vec4(pointAmountFore[10] / 100, colorResultFore[10].a, colorResultFore[10].a, blendColor1.a);
+//	gl_FragColor = vec4((blendColor1.a + 0.0001) * 10000, 0, 0, blendColor1.a);
+//	gl_FragColor = vec4(pointAmountFore[11] / 121.0, pointAmountFore[11] / 121.0, pointAmountFore[11] / 121.0, 1);
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[9].a - colorResultFore[9].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[9].rgb - blendColor0.rgb) * colorResultFore[9].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[8].a - colorResultFore[8].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[8].rgb - blendColor0.rgb) * colorResultFore[8].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[7].a - colorResultFore[7].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[7].rgb - blendColor0.rgb) * colorResultFore[7].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[6].a - colorResultFore[6].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[6].rgb - blendColor0.rgb) * colorResultFore[6].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[5].a - colorResultFore[5].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[5].rgb - blendColor0.rgb) * colorResultFore[5].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[4].a - colorResultFore[4].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[4].rgb - blendColor0.rgb) * colorResultFore[4].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[3].a - colorResultFore[3].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[3].rgb - blendColor0.rgb) * colorResultFore[3].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[2].a - colorResultFore[2].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[2].rgb - blendColor0.rgb) * colorResultFore[2].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[1].a - colorResultFore[1].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[1].rgb - blendColor0.rgb) * colorResultFore[1].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultFore[0].a - colorResultFore[0].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultFore[0].rgb - blendColor0.rgb) * colorResultFore[0].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[1].a - colorResultBack[1].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[1].rgb - blendColor0.rgb) * colorResultBack[1].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[2].a - colorResultBack[2].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[2].rgb - blendColor0.rgb) * colorResultBack[2].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[3].a - colorResultBack[3].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[3].rgb - blendColor0.rgb) * colorResultBack[3].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[4].a - colorResultBack[4].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[4].rgb - blendColor0.rgb) * colorResultBack[4].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[5].a - colorResultBack[5].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[5].rgb - blendColor0.rgb) * colorResultBack[5].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[6].a - colorResultBack[6].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[6].rgb - blendColor0.rgb) * colorResultBack[6].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[7].a - colorResultBack[7].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[7].rgb - blendColor0.rgb) * colorResultBack[7].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[8].a - colorResultBack[8].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[8].rgb - blendColor0.rgb) * colorResultBack[8].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[9].a - colorResultBack[9].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[9].rgb - blendColor0.rgb) * colorResultBack[9].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[10].a - colorResultBack[10].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[10].rgb - blendColor0.rgb) * colorResultBack[10].a / blendColor1.a;
+	//blendColor0 = blendColor1;
+	//blendColor1.a = blendColor0.a + colorResultBack[11].a - colorResultBack[11].a * blendColor0.a;
+	//blendColor1.rgb = blendColor0.rgb + (colorResultBack[11].rgb - blendColor0.rgb) * colorResultBack[11].a / blendColor1.a;
+
+//	gl_FragColor = blendColor1;
 }

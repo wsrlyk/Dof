@@ -16,3 +16,4 @@ dev/Debug/
 dev/ipch/
 *.sdf
 *.suo
+*.opensdf
