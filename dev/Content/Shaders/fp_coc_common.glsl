@@ -14,7 +14,7 @@ int CalculateDCoC(float fd, float z)
    float MaxRawDCoC = MaxOutputDCoC;
    
    float result = MaxOutputDCoC * clamp(RawDCoC/MaxRawDCoC, 0, 1);
-   return int(result+0.5);
+   return int(result+0.5) / 2 * 2 + 1;
 }
 
 float getRealZ(float z_b)

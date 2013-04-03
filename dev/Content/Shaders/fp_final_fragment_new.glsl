@@ -19,12 +19,12 @@ void main(void)
 
 	vec4 CocAndDepth = textureRect(CocAndDepthMap, gl_FragCoord.xy);
 
-	float currentDepth = CocAndDepth.a;
+	float currentDepth = CocAndDepth.g;
 	float focusDepth=textureRect(CocAndDepthMap, vec2(FocusX, FocusY)).g;
-	int currentCoc = int(CocAndDepth.b);
-
+	int currentCoc = int(CocAndDepth.r);
+//	gl_FragColor = textureRect(scene2, gl_FragCoord.xy);
 //	gl_FragColor =  vec4(currentCoc / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
-//	  gl_FragColor =  vec4(currentDepth / 50, currentDepth / 50, currentDepth / 50,1);														// 显示深度图
+//	  gl_FragColor =  vec4(currentDepth / 10, currentDepth / 50, currentDepth / 50,1);														// 显示深度图
 //	return;
 
 
@@ -34,7 +34,9 @@ void main(void)
 	vec2 tmpXY;
 
 	int tempCoc;
-	int tempDepth;
+	float tempDepth;
+	int tempCoc2;
+	float tempDepth2;
 
 	vec4 colorSumFore[maxCoc + 1];
 	vec4 colorSumBack[maxCoc + 1];
@@ -64,148 +66,85 @@ void main(void)
 
 			CocAndDepth = textureRect(CocAndDepthMap, tmpXY);
 			tempCoc = int(CocAndDepth.r);
-			tempDepth = int(CocAndDepth.g);
+			tempDepth = CocAndDepth.g;
+			tempCoc2 = int(CocAndDepth.b);
+			tempDepth2 = CocAndDepth.a;
 
-			int l = 1;
+			int l1, l2;
+			int d1, d2;
+			d1 = clamp(int (1.0 - tempDepth + focusDepth), 0, 1);//clamp(focusDepth + 1 - tempDepth, 0.0, 1.0);
+			d2 = clamp(int (1.0 - tempDepth2 + focusDepth), 0, 1);
 	//		if((abs(col) * 2>= tempCoc) || (abs(row) * 2 > tempCoc))
 	//			l = 0;
-			l = clamp(tempCoc - abs(col) * 2, 0, 1) *  clamp(tempCoc + 1 - abs(row) * 2, 0, 1);
+			l1 = clamp(tempCoc - abs(col) * 2, 0, 1) *  clamp(tempCoc - abs(row) * 2, 0, 1);
+			l2 = clamp(tempCoc2 - abs(col) * 2, 0, 1) *  clamp(tempCoc2 - abs(row) * 2, 0, 1);
 
+			l1 = d1 * l1;
+			l2 = d2 * l2;
 			vec4 color4 = textureRect(scene, tmpXY);
-			if(tempDepth <= focusDepth)
-			{
-			int k;
-			k = abs(tempCoc - 0);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[0] += k *color4;
-				pointAmountFore[0] += k;
-			k = abs(tempCoc - 1);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[1] += k *color4;
-				pointAmountFore[1] += k;
-			k = abs(tempCoc - 2);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[2] += k *color4;
-				pointAmountFore[2] += k;
-			k = abs(tempCoc - 3);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[3] += k *color4;
-				pointAmountFore[3] += k;
-			k = abs(tempCoc - 4);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[4] += k *color4;
-				pointAmountFore[4] += k;
-			k = abs(tempCoc - 5);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[5] += k *color4;
-				pointAmountFore[5] += k;
-			k = abs(tempCoc - 6);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[6] += k *color4;
-				pointAmountFore[6] += k;
-			k = abs(tempCoc - 7);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[7] += k *color4;
-				pointAmountFore[7] += k;
-			k = abs(tempCoc - 8);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[8] += k *color4;
-				pointAmountFore[8] += k;
-			k = abs(tempCoc - 9);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[9] += k *color4;
-				pointAmountFore[9] += k;
-			k = abs(tempCoc - 10);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[10] += k *color4;
-				pointAmountFore[10] += k;
-			k = abs(tempCoc - 11);
-				k = (1 - clamp(k, 0, 1)) * l;
-				colorSumFore[11] += k *color4;
-				pointAmountFore[11] += k;
+			vec4 color42 = textureRect(scene2, tmpXY);
+			int k1, k2, k22;
+			k1 = abs(tempCoc - 1);
+				k1 = (1 - clamp(k1, 0, 1)) * l1;
+			k2 = abs(tempCoc2 - 1);
+				k2 = (1 - clamp(k2, 0, 1)) * l2;
+				k22 = clamp(k2 - k1, 0, 1);
+				colorSumFore[1] += (k1 *color4 + k22 * color42);
+				pointAmountFore[1] += (k1 + k22);
 
-				// test
-				//colorSumFore[0] = vec4(1, 0, 0, 1);
-				//pointAmountFore[0] = 1;
+			k1 = abs(tempCoc - 3);
+				k1 = (1 - clamp(k1, 0, 1)) * l1;
+			k2 = abs(tempCoc2 - 3);
+				k2 = (1 - clamp(k2, 0, 1)) * l2;
+				k22 = clamp(k2 - k1, 0, 1);
+				colorSumFore[3] += (k1 *color4 + k22 * color42);
+				pointAmountFore[3] += (k1 + k22);
 
-			}
-			else
-			{
-			int k;
-			k = abs(0.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[0] += k * l *color4;
-				pointAmountBack[0] += k * l;
-			k = abs(1.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[1] += k * l *color4;
-				pointAmountBack[1] += k * l;
-			k = abs(2.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[2] += k * l *color4;
-				pointAmountBack[2] += k * l;
-			k = abs(3.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[3] += k * l *color4;
-				pointAmountBack[3] += k * l;
-			k = abs(4.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[4] += k * l *color4;
-				pointAmountBack[4] += k * l;
-			k = abs(5.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[5] += k * l *color4;
-				pointAmountBack[5] += k * l;
-			k = abs(6.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[6] += k * l *color4;
-				pointAmountBack[6] += k * l;
-			k = abs(7.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[7] += k * l *color4;
-				pointAmountBack[7] += k * l;
-			k = abs(8.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[8] += k * l *color4;
-				pointAmountBack[8] += k * l;
-			k = abs(9.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[9] += k * l *color4;
-				pointAmountBack[9] += k * l;
-			k = abs(10.0 - tempCoc);
-			k = 1.0 - k / k;
-				colorSumBack[10] += k * l *color4;
-				pointAmountBack[10] += k * l;
-			k = abs(11.0 - tempCoc);
-			k = 1.0 - (k / k);
-				colorSumBack[11] += k * l *color4;
-				pointAmountBack[11] += k * l;
-			}
+			k1 = abs(tempCoc - 5);
+				k1 = (1 - clamp(k1, 0, 1)) * l1;
+			k2 = abs(tempCoc2 - 5);
+				k2 = (1 - clamp(k2, 0, 1)) * l2;
+				k22 = clamp(k2 - k1, 0, 1);
+				colorSumFore[5] += (k1 *color4 + k22 * color42);
+				pointAmountFore[5] += (k1 + k22);
+
+			k1 = abs(tempCoc - 7);
+				k1 = (1 - clamp(k1, 0, 1)) * l1;
+			k2 = abs(tempCoc2 - 7);
+				k2 = (1 - clamp(k2, 0, 1)) * l2;
+				k22 = clamp(k2 - k1, 0, 1);
+				colorSumFore[7] += (k1 *color4 + k22 * color42);
+				pointAmountFore[7] += (k1 + k22);
+
+			k1 = abs(tempCoc - 9);
+				k1 = (1 - clamp(k1, 0, 1)) * l1;
+			k2 = abs(tempCoc2 - 9);
+				k2 = (1 - clamp(k2, 0, 1)) * l2;
+				k22 = clamp(k2 - k1, 0, 1);
+				colorSumFore[9] += (k1 *color4 + k22 * color42);
+				pointAmountFore[9] += (k1 + k22);
+
+			k1 = abs(tempCoc - 11);
+				k1 = (1 - clamp(k1, 0, 1)) * l1;
+			k2 = abs(tempCoc2 - 11);
+				k2 = (1 - clamp(k2, 0, 1)) * l2;
+				k22 = clamp(k2 - k1, 0, 1);
+				colorSumFore[11] += (k1 *color4 + k22 * color42);
+				pointAmountFore[11] += (k1 + k22);
+
 		}
 	}
 
-	colorResultFore[0].rgb = colorSumFore[0].rgb / max(1, pointAmountFore[0]);
-	colorResultFore[0].a = pointAmountFore[0] / (1.0);
 	colorResultFore[1].rgb = colorSumFore[1].rgb / max(1, pointAmountFore[1]);
 	colorResultFore[1].a = pointAmountFore[1] / (1.0);
-	colorResultFore[2].rgb = colorSumFore[2].rgb / max(1, pointAmountFore[2]);
-	colorResultFore[2].a = pointAmountFore[2] / (2.0 * 2.0 - 1.0);
 	colorResultFore[3].rgb = colorSumFore[3].rgb / max(1, pointAmountFore[3]);
 	colorResultFore[3].a = pointAmountFore[3] / (3.0 * 3.0);
-	colorResultFore[4].rgb = colorSumFore[4].rgb / max(1, pointAmountFore[4]);
-	colorResultFore[4].a = pointAmountFore[4] / (4.0 * 4.0 - 1.0);
 	colorResultFore[5].rgb = colorSumFore[5].rgb / max(1, pointAmountFore[5]);
 	colorResultFore[5].a = pointAmountFore[5] / (5.0 * 5.0);
-	colorResultFore[6].rgb = colorSumFore[6].rgb / max(1, pointAmountFore[6]);
-	colorResultFore[6].a = pointAmountFore[6] / (6.0 * 6.0 - 1.0);
 	colorResultFore[7].rgb = colorSumFore[7].rgb / max(1, pointAmountFore[7]);
 	colorResultFore[7].a = pointAmountFore[7] / (7.0 * 7.0);
-	colorResultFore[8].rgb = colorSumFore[8].rgb / max(1, pointAmountFore[8]);
-	colorResultFore[8].a = pointAmountFore[8] / (8.0 * 8.0 - 1.0);
 	colorResultFore[9].rgb = colorSumFore[9].rgb / max(1, pointAmountFore[9]);
 	colorResultFore[9].a = pointAmountFore[9] / (9.0 * 9.0);
-	colorResultFore[10].rgb = colorSumFore[10].rgb / max(1, pointAmountFore[10]);
-	colorResultFore[10].a = pointAmountFore[10] / (10.0 * 10.0 - 1.0);
 	colorResultFore[11].rgb = colorSumFore[11].rgb / max(1, pointAmountFore[11]);
 	colorResultFore[11].a = pointAmountFore[11] / (11.0 * 11.0);
 
@@ -239,40 +178,27 @@ void main(void)
 
 
 	vec4 blendColor0;
-	vec4 blendColor1 = colorResultFore[0];
-	//	gl_FragColor = vec4(blendColor1.rgb * blendColor1.a, 1.0);
+	vec4 blendColor1 = colorResultFore[1];
+//		gl_FragColor = vec4(blendColor1.rgb * blendColor1.a, 1.0);
 //	return;
 
-	blendColor1.a =  blendColor1.a + colorResultFore[1].a - colorResultFore[1].a * blendColor1.a;
-	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[1].rgb, colorResultFore[1].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
-	blendColor1.a =  blendColor1.a + colorResultFore[2].a - colorResultFore[2].a * blendColor1.a;
-	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[2].rgb, colorResultFore[2].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
 	blendColor1.a =  blendColor1.a + colorResultFore[3].a - colorResultFore[3].a * blendColor1.a;
 	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[3].rgb, colorResultFore[3].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
-	blendColor1.a =  blendColor1.a + colorResultFore[4].a - colorResultFore[4].a * blendColor1.a;
-	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[4].rgb, colorResultFore[4].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
 	blendColor1.a =  blendColor1.a + colorResultFore[5].a - colorResultFore[5].a * blendColor1.a;
 	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[5].rgb, colorResultFore[5].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
-	blendColor1.a =  blendColor1.a + colorResultFore[6].a - colorResultFore[6].a * blendColor1.a;
-	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[6].rgb, colorResultFore[6].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
 	blendColor1.a =  blendColor1.a + colorResultFore[7].a - colorResultFore[7].a * blendColor1.a;
 	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[7].rgb, colorResultFore[7].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
-	blendColor1.a =  blendColor1.a + colorResultFore[8].a - colorResultFore[8].a * blendColor1.a;
-	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[8].rgb, colorResultFore[8].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
 //	blendColor1.a =  clamp(blendColor1.a + colorResultFore[9].a, 0.0, 1.0);// - colorResultFore[10].a * blendColor1.a;
 	blendColor1.a =  blendColor1.a + colorResultFore[9].a - colorResultFore[9].a * blendColor1.a;
 	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[9].rgb, colorResultFore[9].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
-//	blendColor1.a =  clamp(blendColor1.a + colorResultFore[10].a, 0.0, 1.0);// - colorResultFore[10].a * blendColor1.a;
-	blendColor1.a =  blendColor1.a + colorResultFore[10].a - colorResultFore[10].a * blendColor1.a;
-	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[10].rgb, colorResultFore[10].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
 	blendColor1.a =  blendColor1.a + colorResultFore[11].a - colorResultFore[11].a * blendColor1.a;
 	blendColor1.rgb = mix(blendColor1.rgb, colorResultFore[11].rgb, colorResultFore[11].a / max(0.000001f, blendColor1.a)) ;//+ (colorResultFore[10].rgb - colorResultFore[11].rgb) * (0) / colorResultFore[11].a;
 
 
 		gl_FragColor = vec4(blendColor1.rgb * blendColor1.a, 1.0);
-		return;
-//	if(blendColor1.a > 0)
-//	gl_FragColor = mix(textureRect(scene, gl_FragCoord.xy), blendColor1, blendColor1.a);
+//		return;
+	if(blendColor1.a > 0)
+		gl_FragColor = mix(textureRect(scene, gl_FragCoord.xy), blendColor1, blendColor1.a);
 
 //		gl_FragColor = vec4(blendColor1.a, blendColor1.a, blendColor1.a, 1.0);
 //	if(blendColor1.a >1)

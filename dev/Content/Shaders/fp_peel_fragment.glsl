@@ -25,6 +25,9 @@ void main(void)
 	if (gl_FragCoord.z <= frontDepth) {
 		discard;
 	}
+	if (gl_FragCoord.z - frontDepth < 0.004) {
+		discard;
+	}
 
 	float currentDepth = getRealZ(gl_FragCoord.z);
 	float focusDepth = getRealZ(textureRect(DepthTex, vec2(focusX, focusY)).r);
@@ -34,7 +37,7 @@ void main(void)
 		if(DCoC > ClearCoc){
 			gl_FragColor = vec4(DCoC* 0.1, 0.25, 0.75,0);
 //			return;
-			discard;
+//			discard;
 		}
 	}
 

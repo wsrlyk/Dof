@@ -22,9 +22,8 @@ void main(void)
 
 	int DCoC = CalculateDCoC(focusDepth, frontDepth);
 	float frontDepth2 = getRealZ(textureRect(DepthTex2, gl_FragCoord.xy).r);
-	float focusDepth2 = getRealZ(textureRect(DepthTex2, vec2(focusX, focusY)).r);
 
-	int DCoC2 = CalculateDCoC(focusDepth2, frontDepth2);
+	int DCoC2 = CalculateDCoC(focusDepth, frontDepth2);
 	gl_FragData[0] = vec4(1.0 * DCoC, frontDepth, 1.0 * DCoC2, frontDepth2);
 //	gl_FragData[1] = vec4(focusDepth);
 //	gl_FragData[1] = vec4(frontDepth);
