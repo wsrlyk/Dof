@@ -9,6 +9,7 @@
 uniform float focusX;
 uniform float focusY;
 uniform samplerRECT DepthTex;
+uniform samplerRECT DepthTex2;
 
 float MaxOutputDCoC;
 
@@ -20,7 +21,11 @@ void main(void)
 	float focusDepth = getRealZ(textureRect(DepthTex, vec2(focusX, focusY)).r);
 
 	int DCoC = CalculateDCoC(focusDepth, frontDepth);
-	gl_FragData[0] = vec4(1.0 * DCoC, frontDepth, 0, 1.0);
+	float frontDepth2 = getRealZ(textureRect(DepthTex2, gl_FragCoord.xy).r);
+	float focusDepth2 = getRealZ(textureRect(DepthTex2, vec2(focusX, focusY)).r);
+
+	int DCoC2 = CalculateDCoC(focusDepth2, frontDepth2);
+	gl_FragData[0] = vec4(1.0 * DCoC, frontDepth, 1.0 * DCoC2, frontDepth2);
 //	gl_FragData[1] = vec4(focusDepth);
 //	gl_FragData[1] = vec4(frontDepth);
 }

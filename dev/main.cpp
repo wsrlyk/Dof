@@ -1650,6 +1650,7 @@ void RenderFrontToBackPeeling()
 
 	g_shaderFrontCalcCoc.bind();
 	g_shaderFrontCalcCoc.bindTextureRECT("DepthTex", g_frontDepthTexId[prevId], 0);
+	g_shaderFrontCalcCoc.bindTextureRECT("DepthTex2", g_frontDepthTexId[currId], 1);
 	g_shaderFrontCalcCoc.setUniform("focusX", (float*)&g_clickPosX, 1);
 	g_shaderFrontCalcCoc.setUniform("focusY", (float*)&g_clickPosY, 1);
 	float zFar = CAMERA_ZFAR;
