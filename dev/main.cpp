@@ -1811,7 +1811,7 @@ void preFor(int step)
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_frontColorBlenderFboId);
 			glDrawBuffer(g_drawBuffers[0]);
 
-			glClearColor(0, 0, 0, 1);
+			glClearColor(0.48, 0.64, 0.96, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			glEnable(GL_DEPTH_TEST);
@@ -1823,7 +1823,7 @@ void preFor(int step)
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_frontFboId[currId]);
 			glDrawBuffer(g_drawBuffers[0]);
 
-			glClearColor(0, 0, 0, 0);
+			glClearColor(0.48, 0.64, 0.96, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			glDisable(GL_BLEND);
@@ -1833,7 +1833,7 @@ void preFor(int step)
 		break;
 	}
 	glDisable(GL_LIGHTING);
-	g_SkyBox.Render();
+//	g_SkyBox.Render();
 	glEnable(GL_LIGHTING);
 
 }
