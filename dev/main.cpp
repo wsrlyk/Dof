@@ -1,4 +1,6 @@
 #include "main.h"
+#include "jitter.h"
+#include "AccuBuffer.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -55,7 +57,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 if (g_hasFocus)
                 {
                     UpdateFrame(GetElapsedTimeInSeconds());
-                    DrawFrame();
+                  //  DrawFrame();
+					RenderAccumulationBuffer();
                     SwapBuffers(g_hDC);
                 }
                 else
@@ -1555,7 +1558,7 @@ void InitFrontPeelingRenderTargets()
 		GL_TEXTURE_RECTANGLE_ARB, g_frontColorBlenderTexId, 0);
 
 
-	//////////////////////////////            skybox      ////////////////////////////////////////////
+	/*/////////////////////////////            skybox      ////////////////////////////////////////////
 	for(int i = 0; i < 6; ++i){
 	char path[128];
 	sprintf(path, "content//models//sky%d.bmp", i);
@@ -1575,7 +1578,7 @@ void InitFrontPeelingRenderTargets()
 	float pos[3]= {0, 0, 0};
 	g_SkyBox.LoadTexture(g_frontSkyboxTexId);
 	g_SkyBox.SetPosAndSize(pos, size);
-
+	*/
 	//glGenFramebuffersEXT(1, &g_frontBackgroundFboId);
 	//glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_frontBackgroundFboId);
 	//glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
@@ -1727,6 +1730,32 @@ void RenderAverageColors()
 
 }
 
+void RenderAccumulationBuffer()
+{
+	int jitter;
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	glClear(GL_ACCUM_BUFFER_BIT);
+	for (jitter = 0; jitter < 66; jitter++) {
+		glClearColor(g_skyColor[0], g_skyColor[1], g_skyColor[2], 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		AccuBuffer::accPerspective(CAMERA_FOVY, 
+			(GLdouble) viewport[2]/(GLdouble) viewport[3], 
+			CAMERA_ZNEAR, CAMERA_ZFAR, 0.0, 0.0,
+			0.1*j66[jitter].x, 0.1*j66[jitter].y, 3.0);
+		//glTranslatef (g_cameraPos[0], g_cameraPos[1], g_cameraPos[2]);
+		AccuBuffer::gluLookAt(g_cameraPos[0], g_cameraPos[1], g_cameraPos[2],
+			      g_targetPos[0], g_targetPos[1], g_targetPos[2],
+			0.0f, 1.0f, 0.0f);
+		glRotatef(g_pitch, 1.0f, 0.0f, 0.0f);
+		glRotatef(g_heading, 0.0f, 1.0f, 0.0f);
+		DrawModel(-1);
+		glAccum(GL_ACCUM, 1.0/66);
+	}
+	glAccum(GL_RETURN, 1.0);
+	glFlush();
+}
+
 void DrawModel(int step)
 {
 	const ModelOBJ::Mesh *pMesh = 0;
@@ -1811,7 +1840,7 @@ void preFor(int step)
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_frontColorBlenderFboId);
 			glDrawBuffer(g_drawBuffers[0]);
 
-			glClearColor(0.48, 0.64, 0.96, 0);
+			glClearColor(g_skyColor[0], g_skyColor[1], g_skyColor[2], 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			glEnable(GL_DEPTH_TEST);
@@ -1823,11 +1852,16 @@ void preFor(int step)
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_frontFboId[currId]);
 			glDrawBuffer(g_drawBuffers[0]);
 
-			glClearColor(0.48, 0.64, 0.96, 0);
+			glClearColor(g_skyColor[0], g_skyColor[1], g_skyColor[2], 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			glDisable(GL_BLEND);
 			glEnable(GL_DEPTH_TEST);
+			break;
+		}
+	case -1:
+		{
+
 		}
 	default:
 		break;
@@ -1873,6 +1907,7 @@ void preModel(int step, const ModelOBJ::Mesh *pMesh)
 	switch(step)
 	{
 	case 0:
+	case -1:
 		{
 
 			g_shaderFrontInit.bind();
@@ -1893,6 +1928,7 @@ void preModel(int step, const ModelOBJ::Mesh *pMesh)
 			float zNear = CAMERA_ZNEAR;
 			g_shaderFrontPeel.setUniform("zFar", (float*)&zFar, 1);
 			g_shaderFrontPeel.setUniform("zNear", (float*)&zNear, 1);
+			break;
 		}
 	default:
 		break;
@@ -1910,6 +1946,7 @@ void postModel(int step)
 	case 1:
 		{
 			g_shaderFrontPeel.unbind();
+			break;
 		}
 	default:
 		break;

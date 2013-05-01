@@ -139,8 +139,10 @@ GLuint              g_normalMappingShader;
 float               g_maxAnisotrophy;
 float               g_heading = -153.3;//-48;
 float               g_pitch = 1.8;//29;
-float               g_cameraPos[3] = {-0.74, -0.36, 3.78};
-float               g_targetPos[3] = {-0.74, -0.36, 0};
+float               g_cameraPos[3] = {-0.835, -0.145, 3.78};
+float               g_targetPos[3] = {-0.835, -0.145, 0};
+float				g_clickPosX = 390;
+float				g_clickPosY = 34;
 bool                g_isFullScreen;
 bool                g_hasFocus;
 bool                g_enableWireframe;
@@ -148,9 +150,8 @@ bool                g_enableTextures = true;
 bool                g_supportsProgrammablePipeline;
 bool                g_cullBackFaces = true;
 
+float				g_skyColor[3] = {0.48, 0.64, 0.96};
 bool				g_click = false;
-float				g_clickPosX = 422;
-float				g_clickPosY = 207;
 ModelOBJ            g_model;
 ModelTextures       g_modelTextures;
 
@@ -245,3 +246,5 @@ void postFor(int step);
 
 void preModel(int step, const ModelOBJ::Mesh *pMesh);
 void postModel(int step);
+
+void RenderAccumulationBuffer();

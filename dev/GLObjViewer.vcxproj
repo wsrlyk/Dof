@@ -92,6 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AccuBuffer.cpp" />
     <ClCompile Include="bitmap.cpp" />
     <ClCompile Include="gl2.cpp" />
     <ClCompile Include="GLSLProgramObject.cpp" />
@@ -101,9 +102,11 @@
     <ClCompile Include="WGL_ARB_multisample.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AccuBuffer.h" />
     <ClInclude Include="bitmap.h" />
     <ClInclude Include="gl2.h" />
     <ClInclude Include="GLSLProgramObject.h" />
+    <ClInclude Include="jitter.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="model_obj.h" />
     <ClInclude Include="resource.h" />

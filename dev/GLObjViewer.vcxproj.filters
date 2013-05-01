@@ -22,6 +22,9 @@
     <ClCompile Include="SkyBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AccuBuffer.cpp">
+      <Filter>Source Files\accumulation buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h">
@@ -47,6 +50,12 @@
     </ClInclude>
     <ClInclude Include="SkyBox.h">
       <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AccuBuffer.h">
+      <Filter>Source Files\accumulation buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="jitter.h">
+      <Filter>Source Files\accumulation buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +162,9 @@
     </Filter>
     <Filter Include="Resource Files\fp">
       <UniqueIdentifier>{a1d824a4-db15-4995-b1b0-68b153e5b8ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\accumulation buffer">
+      <UniqueIdentifier>{66e0f50c-3f1a-4b49-bded-0b64f55cbe82}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
