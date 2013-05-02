@@ -11,12 +11,13 @@ uniform float height;
 void main()
 {
 //	gl_FragColor = texture2DArray(layerArray, vec3(gl_FragCoord.xy, 0));
-//	gl_FragColor = texture2DArray(layerArray, vec3(gl_FragCoord.x/width, gl_FragCoord.y/height, 22));
+//	gl_FragColor = texture2DArray(layerArray, vec3(gl_FragCoord.x/width, gl_FragCoord.y/height, 21));
 //	return;
 
 	vec4 result = vec4(0, 0, 0, 0);
 	vec4 buffer;
-	for(int i = Klayers - 1; i >= 0; --i)
+	for(int i = Klayers - 1; i >= 0; i = i - 1)
+//	int i = 3;
 	{
 		int DCoC = abs(11 - i);
 		int radius = DCoC / 2;
@@ -24,11 +25,17 @@ void main()
 		float weight = 1.0 / (DCoC * DCoC);
 		buffer = vec4(0, 0, 0, 0);
 		for(int j = -radius; j < _radius; ++j)
+		{
 			for(int k = -radius; k < _radius; ++k)
 			{
-				buffer += weight * texture2DArray(layerArray, vec3((gl_FragCoord.x + j)/width, (gl_FragCoord.y + k)/height, i));
+				buffer += texture2DArray(layerArray, vec3((gl_FragCoord.x + j)/width, (gl_FragCoord.y + k)/height, i));
 			}
-		
+		}
+		if(buffer.a != 0){
+			buffer.rgb = buffer.rgb / buffer.a;
+			buffer.a = buffer.a * weight;
+		}
+
 		if( i == Klayers - 1)
 		{
 			result = buffer;
@@ -43,4 +50,6 @@ void main()
 		}
 	}
 	gl_FragColor = result;
+//	gl_FragColor = vec4(result.rgb * result.a, result.a);
+	//gl_FragColor = texture2DArray(layerArray, vec3((gl_FragCoord.x)/width, (gl_FragCoord.y)/height, i));
 }
