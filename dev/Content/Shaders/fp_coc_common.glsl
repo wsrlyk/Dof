@@ -12,7 +12,7 @@ int CalculateDCoC(float focus_z, float z)
       a = 0.00001;
    float RawDCoC = abs((D*f*(focus_z-z))/(focus_z*a));
    
-   float result = clamp(RawDCoC, 0, MaxOutputDCoC);
+   float result = clamp(RawDCoC, 1, MaxOutputDCoC);
 //   return int(result+0.5) / 2 * 2 + 1;
    return int(result);
 
