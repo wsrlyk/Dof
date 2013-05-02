@@ -182,6 +182,14 @@ GLuint g_frontSkyboxTexId[6];
 int currId;
 int prevId;
 
+// ds
+GLSLProgramObject g_shaderDsDecomposition;
+GLSLProgramObject g_shaderDsBluring;
+
+GLuint g_dsFboId;
+GLuint g_dsLayerTexId;
+GLuint g_dsLayerFboId;
+
 //////////////////////////////////////////////////////////////////////////
 GLuint g_vboId;
 GLuint g_eboId;
@@ -235,6 +243,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 #define SHADER_PATH "content//shaders//"
 void InitAccumulationRenderTargets();
 void InitFrontPeelingRenderTargets();
+void InitDsRenderTargets();
 void BuildShaders();
 void MakeFullScreenQuad();
 void RenderAverageColors();
@@ -248,3 +257,4 @@ void preModel(int step, const ModelOBJ::Mesh *pMesh);
 void postModel(int step);
 
 void RenderAccumulationBuffer();
+void RenderDavidSchedl();

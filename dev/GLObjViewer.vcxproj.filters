@@ -137,6 +137,18 @@
     <None Include="Content\Shaders\fp_final_fragment_new.glsl">
       <Filter>Resource Files\fp</Filter>
     </None>
+    <None Include="Content\Shaders\ds_decomposition_vertex.glsl">
+      <Filter>Resource Files\ds</Filter>
+    </None>
+    <None Include="Content\Shaders\ds_decomposition_fragment.glsl">
+      <Filter>Resource Files\ds</Filter>
+    </None>
+    <None Include="Content\Shaders\ds_bluring_vertex.glsl">
+      <Filter>Resource Files\ds</Filter>
+    </None>
+    <None Include="Content\Shaders\ds_bluring_fragment.glsl">
+      <Filter>Resource Files\ds</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Include Files">
@@ -165,6 +177,9 @@
     </Filter>
     <Filter Include="Source Files\accumulation buffer">
       <UniqueIdentifier>{66e0f50c-3f1a-4b49-bded-0b64f55cbe82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\ds">
+      <UniqueIdentifier>{90e2c59c-cc57-4871-b0b4-e63e97669915}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

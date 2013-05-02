@@ -57,8 +57,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 if (g_hasFocus)
                 {
                     UpdateFrame(GetElapsedTimeInSeconds());
-                  //  DrawFrame();
-					RenderAccumulationBuffer();
+                    DrawFrame();
+					//RenderAccumulationBuffer();
                     SwapBuffers(g_hDC);
                 }
                 else
@@ -347,7 +347,8 @@ void DrawFrame()
 //    else
 //        DrawModelUsingFixedFuncPipeline();
 //	RenderAverageColors();
-	RenderFrontToBackPeeling();
+//	RenderFrontToBackPeeling();
+	RenderDavidSchedl();
 }
 
 void DrawModelUsingFixedFuncPipeline()
@@ -745,6 +746,7 @@ void InitApp()
 	BuildShaders();
 	InitAccumulationRenderTargets();
 	InitFrontPeelingRenderTargets();
+	InitDsRenderTargets();
 	MakeFullScreenQuad();
 }
 
@@ -1450,6 +1452,17 @@ void BuildShaders()
 	g_shaderFrontBackground.attachVertexShader(SHADER_PATH "fp_final_vertex.glsl");
 	g_shaderFrontBackground.attachFragmentShader(SHADER_PATH "fp_background_fragment.glsl");
 	g_shaderFrontBackground.link();
+
+	//////////////////////////////////////////////////////////////////////////
+	g_shaderDsDecomposition.attachVertexShader(SHADER_PATH "ds_decomposition_vertex.glsl");
+	g_shaderDsDecomposition.attachFragmentShader(SHADER_PATH "fp_coc_common.glsl");
+	g_shaderDsDecomposition.attachFragmentShader(SHADER_PATH "ds_decomposition_fragment.glsl");
+	g_shaderDsDecomposition.link();
+
+	g_shaderDsBluring.attachVertexShader(SHADER_PATH "ds_bluring_vertex.glsl");
+	g_shaderDsBluring.attachFragmentShader(SHADER_PATH "ds_bluring_fragment.glsl");
+	g_shaderDsBluring.link();
+
 }
 void InitAccumulationRenderTargets()
 {
@@ -1480,6 +1493,23 @@ void InitAccumulationRenderTargets()
 
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	//	CHECK_GL_ERRORS;
+}
+void InitDsRenderTargets()
+{
+	glGenTextures(1, &g_dsLayerTexId);
+	glGenFramebuffersEXT(1, &g_dsFboId);
+	glGenFramebuffersEXT(1, &g_dsLayerFboId);
+
+//	for (int i = 0; i < 30; i++)
+	{
+		glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, g_dsLayerTexId);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY_EXT, 0, GL_RGBA,  g_windowWidth, g_windowHeight, 30,
+			0, GL_RGBA, GL_FLOAT, 0);
+	}
 }
 void InitFrontPeelingRenderTargets()
 {
@@ -1618,31 +1648,11 @@ void RenderFrontToBackPeeling()
 
 	DrawModel(0);
 	int numLayers = 2;
-	/*for (int layer = 1; layer < numLayers; layer++)*/ {
-		currId = 1; //layer % 2;
-		prevId = 1 - currId;
+	currId = 1; //layer % 2;
+	prevId = 1 - currId;
 
-		DrawModel(1);
-
-		//////////////////////////////////////////////////////////////////////////step 3
-/*		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_frontColorBlenderFboId);
-		glDrawBuffer(g_drawBuffers[0]);
-
-		glDisable(GL_DEPTH_TEST);
-		//glEnable(GL_BLEND);
-
-		//glBlendEquation(GL_FUNC_ADD);
-		//glBlendFuncSeparate(GL_DST_ALPHA, GL_ONE,
-		//	GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
-
-		g_shaderFrontBlend.bind();
-		g_shaderFrontBlend.bindTextureRECT("TempTex", g_frontColorTexId[currId], 0);
-		glCallList(g_quadDisplayList);
-		g_shaderFrontBlend.unbind();
-*/
-//		glDisable(GL_BLEND);
-	}
-
+	DrawModel(1);
+	
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_frontCocFboId);
 	glDrawBuffers(2, g_drawBuffers);
 	glDisable(GL_DEPTH_TEST);
@@ -1684,6 +1694,71 @@ void RenderFrontToBackPeeling()
 	glCallList(g_quadDisplayList);
 	g_shaderFrontFinal.unbind();
 
+}
+
+void RenderDavidSchedl()
+{
+	DrawModel(0);
+	int numLayers = 2;
+	currId = 1; //layer % 2;
+	prevId = 1 - currId;
+	DrawModel(1);
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_frontCocFboId);
+	glDrawBuffers(2, g_drawBuffers);
+	glDisable(GL_DEPTH_TEST);
+
+
+	//	glClearColor(1, 0, 0, 1);
+	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	g_shaderFrontCalcCoc.bind();
+	g_shaderFrontCalcCoc.bindTextureRECT("DepthTex", g_frontDepthTexId[prevId], 0);
+	g_shaderFrontCalcCoc.bindTextureRECT("DepthTex2", g_frontDepthTexId[currId], 1);
+	g_shaderFrontCalcCoc.setUniform("focusX", (float*)&g_clickPosX, 1);
+	g_shaderFrontCalcCoc.setUniform("focusY", (float*)&g_clickPosY, 1);
+	float zFar = CAMERA_ZFAR;
+	float zNear = CAMERA_ZNEAR;
+	g_shaderFrontCalcCoc.setUniform("zFar", (float*)&zFar, 1);
+	g_shaderFrontCalcCoc.setUniform("zNear", (float*)&zNear, 1);
+	glCallList(g_quadDisplayList);
+	g_shaderFrontCalcCoc.unbind();
+
+	glDisable(GL_BLEND);
+
+	//////////////////////////////////////////////////////////////////////////
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_dsLayerFboId);
+	glDrawBuffer(g_drawBuffers[0]);
+
+	g_shaderDsDecomposition.bind();
+	g_shaderDsDecomposition.setUniform("focusX", (float*)&g_clickPosX, 1);
+	g_shaderDsDecomposition.setUniform("focusY", (float*)&g_clickPosY, 1);
+	g_shaderDsDecomposition.setUniform("zFar", (float*)&zFar, 1);
+	g_shaderDsDecomposition.setUniform("zNear", (float*)&zNear, 1);
+	g_shaderDsDecomposition.bindTextureRECT("CocAndDepthMap", /*g_frontColorTexId[currId]*/g_frontRealDepthTexId, 0);
+	g_shaderDsDecomposition.bindTextureRECT("scene", /*g_frontColorTexId[currId]*/g_frontColorBlenderTexId, 1);
+	g_shaderDsDecomposition.bindTextureRECT("scene2", g_frontColorTexId[currId], 3);
+
+	for(int i=0; i<23; i++)
+	{
+		float currentLayer = i;
+		glFramebufferTextureLayerEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, g_dsLayerTexId, 0, i );
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		g_shaderDsDecomposition.setUniform("currentLayer", (float*)&currentLayer, 1);
+		glCallList(g_quadDisplayList);
+	}
+	g_shaderDsDecomposition.unbind();
+
+	//////////////////////////////////////////////////////////////////////////
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glDrawBuffer(GL_BACK);
+	glDisable(GL_DEPTH_TEST);
+	g_shaderDsBluring.bind();
+	g_shaderDsBluring.setUniform("width", (float*)&g_windowWidth, 1);
+	g_shaderDsBluring.setUniform("height", (float*)&g_windowHeight, 1);
+	g_shaderDsBluring.bindTexture2D("layerArray", g_dsLayerTexId, 0);
+	glCallList(g_quadDisplayList);
+	g_shaderDsBluring.unbind();
 }
 void RenderAverageColors()
 {

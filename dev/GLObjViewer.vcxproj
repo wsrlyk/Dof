@@ -132,6 +132,10 @@
     <None Include="Content\Shaders\blinn_phong.glsl" />
     <None Include="Content\Shaders\blinn_phong_frag.glsl" />
     <None Include="Content\Shaders\blinn_phong_vert.glsl" />
+    <None Include="Content\Shaders\ds_bluring_fragment.glsl" />
+    <None Include="Content\Shaders\ds_bluring_vertex.glsl" />
+    <None Include="Content\Shaders\ds_decomposition_fragment.glsl" />
+    <None Include="Content\Shaders\ds_decomposition_vertex.glsl" />
     <None Include="Content\Shaders\fp_background_fragment.glsl" />
     <None Include="Content\Shaders\fp_calcCoc_fragment.glsl" />
     <None Include="Content\Shaders\fp_blend_vertex.glsl" />
