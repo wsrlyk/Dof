@@ -16,7 +16,7 @@ void main()
 
 	vec4 result = vec4(0, 0, 0, 0);
 	vec4 buffer;
-	for(int i = Klayers - 1; i >= 0; i = i - 1)
+	for(int i = Klayers - 1; i >= 0; --i)
 //	int i = 3;
 	{
 		int DCoC = abs(11 - i);

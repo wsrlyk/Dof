@@ -9,8 +9,8 @@ uniform samplerRECT CocAndDepthMap;
 
 uniform float width;
 uniform float height;
-uniform float FocusX;
-uniform float FocusY;
+uniform float focusX;
+uniform float focusY;
 
 #define maxCoc 11
 #define halfCoc 5
@@ -20,7 +20,7 @@ void main(void)
 	vec4 CocAndDepth = textureRect(CocAndDepthMap, gl_FragCoord.xy);
 	vec4 currentColor = textureRect(scene, gl_FragCoord.xy);
 	float currentDepth = CocAndDepth.g;
-	float focusDepth=textureRect(CocAndDepthMap, vec2(FocusX, FocusY)).g;
+	float focusDepth=textureRect(CocAndDepthMap, vec2(focusX, focusY)).g;
 	int currentCoc = int(CocAndDepth.r);
 //	gl_FragColor = textureRect(scene2, gl_FragCoord.xy);
 //	gl_FragColor =  vec4(currentCoc / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);

@@ -17,8 +17,8 @@ uniform samplerRECT CocAndDepthMap;
 
 uniform float width;
 uniform float height;
-uniform float FocusX;
-uniform float FocusY;
+uniform float focusX;
+uniform float focusY;
 
 //float MaxDistance = 40.0;
 
@@ -36,7 +36,7 @@ void main(void)
 	vec4 CocAndDepth = textureRect(CocAndDepthMap, gl_FragCoord.xy);
 
 	float depth = CocAndDepth.g;
-	float fd=textureRect(CocAndDepthMap, vec2(FocusX, FocusY)).g;
+	float fd=textureRect(CocAndDepthMap, vec2(focusX, focusY)).g;
 
 	float tmpCoC = CocAndDepth.r;
 	int DCoC = int(tmpCoC);

@@ -8,8 +8,8 @@ uniform samplerRECT CocAndDepthMap;
 
 uniform float width;
 uniform float height;
-uniform float FocusX;
-uniform float FocusY;
+uniform float focusX;
+uniform float focusY;
 
 uniform float currentLayer;
 
@@ -23,12 +23,12 @@ float CalculateDepthFromCoC(float focus_z, int coc);
 
 void main()
 {
-	float focusDepth=textureRect(CocAndDepthMap, vec2(FocusX, FocusY)).g;
+	float focusDepth=textureRect(CocAndDepthMap, vec2(focusX, focusY)).g;
 
 	float z[ZNum];
 	for(int i = 0; i < Klayers; ++i)
 	{
-		z[i + ZOFFSET] = 1.0 + (i + ZOFFSET) * 0.5;//CalculateDepthFromCoC(focusDepth, 11 - i);
+		z[i + ZOFFSET] = CalculateDepthFromCoC(focusDepth, 11 - i);
 	}
 	z[0] = 0.0f;
 	z[1] = 0.0f;
@@ -100,9 +100,9 @@ void main()
 			L[i] = vec4(0, 0, 0, 0);
 		}
 	//	gl_FragColor = L[i];
-	//	gl_FragColor = vec4(currentDepth2 / 200.0, 0, 1, 1);//L[i];
-	//	gl_FragColor = currentColor;
 		gl_FragColor = vec4(L[i].rgb * L[i].a, L[i].a);
+	//	gl_FragColor = vec4(focusDepth / 10.0, 0, 1, 1);//L[i];
+	//	gl_FragColor = currentColor;
 	//	gl_FragColor = visibleLayerResult * visibleLayerResult.a;
 	//	gl_FragColor = occludedLayerResult * occludedLayerResult.a;
 	}

@@ -1685,8 +1685,8 @@ void RenderFrontToBackPeeling()
 	g_shaderFrontFinal.setUniform("BackgroundColor", g_backgroundColor, 3);
 	g_shaderFrontFinal.setUniform("width", (float*)&g_windowWidth, 1);
 	g_shaderFrontFinal.setUniform("height", (float*)&g_windowHeight, 1);
-	g_shaderFrontFinal.setUniform("FocusX", (float*)&g_clickPosX, 1);
-	g_shaderFrontFinal.setUniform("FocusY", (float*)&g_clickPosY, 1);
+	g_shaderFrontFinal.setUniform("focusX", (float*)&g_clickPosX, 1);
+	g_shaderFrontFinal.setUniform("focusY", (float*)&g_clickPosY, 1);
 //	g_shaderFrontFinal.bindTextureRECT("CoCMap", /*g_frontColorTexId[currId]*/g_frontCocTexId, 0);
 	g_shaderFrontFinal.bindTextureRECT("CocAndDepthMap", /*g_frontColorTexId[currId]*/g_frontRealDepthTexId, 0);
 	g_shaderFrontFinal.bindTextureRECT("scene", /*g_frontColorTexId[currId]*/g_frontColorBlenderTexId, 1);
