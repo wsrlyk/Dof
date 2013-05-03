@@ -2,7 +2,7 @@ float MaxOutputDCoC;
 uniform float zFar;
 uniform float zNear;
 
-int CalculateDCoC(float focus_z, float z)
+float CalculateDCoC(float focus_z, float z)
 {
    //单位都是cm
    float D=30.0f;
@@ -16,7 +16,8 @@ int CalculateDCoC(float focus_z, float z)
 //   int odd = int(result) / 2 * 2 + 1;
 //   return (result - odd) * 0.5 + odd;
 //   return int(result+0.5) / 2 * 2 + 1;
-   return int(result);
+	return result;
+   //return int(result);
 
 }
 

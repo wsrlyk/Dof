@@ -12,7 +12,7 @@ uniform float focusY;
 float ClearCoc;
 vec4 ShadeFragment();
 
-int CalculateDCoC(float fd, float z);
+float CalculateDCoC(float fd, float z);
 float getRealZ(float z_b);
 void main(void)
 {
@@ -25,21 +25,17 @@ void main(void)
 	if (gl_FragCoord.z <= frontDepth) {
 		discard;
 	}
-	if (gl_FragCoord.z - frontDepth < 0.004) {
-		discard;
-	}
+	//if (gl_FragCoord.z - frontDepth < 0.004) {
+	//	discard;
+	//}
 
-	float currentDepth = getRealZ(gl_FragCoord.z);
+	float currentRealDepth = getRealZ(gl_FragCoord.z);
+	float frontRealDepth = getRealZ(frontDepth);
 	float focusDepth = getRealZ(textureRect(DepthTex, vec2(focusX, focusY)).r);
-	if(currentDepth < focusDepth)
-	{
-		int DCoC = CalculateDCoC(focusDepth, currentDepth);
-		if(DCoC > ClearCoc){
-			gl_FragColor = vec4(DCoC* 0.1, 0.25, 0.75,0);
-//			return;
-//			discard;
-		}
-	}
+	if((frontRealDepth - focusDepth) * (currentRealDepth - focusDepth) >0
+	 && abs(int(CalculateDCoC(focusDepth, currentRealDepth)) - int(CalculateDCoC(focusDepth, frontRealDepth))) <= 0)
+		discard;
+
 
 	// Shade all the fragments behind the z-buffer
 	vec4 color = ShadeFragment();
