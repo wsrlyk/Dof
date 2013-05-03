@@ -14,6 +14,8 @@ uniform float focusY;
 
 #define maxCoc 11
 #define halfCoc 5
+
+float CalculateDepthFromCoC(float focus_z, int coc);
 void main(void)
 {
 
@@ -34,6 +36,14 @@ void main(void)
 
 	int currentIsFore = currentDepth - focusDepth < 0 ? -1: 1;
 	int currentIsFore2 = currentDepth2 - focusDepth < 0 ? -1: 1;
+
+	float maxDistance = 3*CalculateDepthFromCoC(focusDepth, -currentCoc * currentIsFore-1) 
+									-  CalculateDepthFromCoC(focusDepth, -currentCoc * currentIsFore);
+	float maxDistance2 = CalculateDepthFromCoC(focusDepth, -currentCoc2 * currentIsFore2-1) 
+									-  CalculateDepthFromCoC(focusDepth, -currentCoc2 * currentIsFore2);
+//	  gl_FragColor =  vec4(maxDistance / 1, 1, 1,1);														// ÏÔÊ¾Éî¶ÈÍ¼
+//	return;
+
 	float tmpX, tmpY;
 	float mean, zeta = 0;
 	float depth;
@@ -97,22 +107,22 @@ void main(void)
 					
 					if(currentCoc * currentIsFore == i)
 					{
-						if( abs(tempCoc - currentCoc) <= 1 &&  tempIsFore == currentIsFore)
+						if( abs(tempCoc - currentCoc) <= 1 &&  tempIsFore == currentIsFore && abs(tempDepth - currentDepth) <= maxDistance)
 						{
 							result = color4;// * fract(1.0-(tempFloatCoc - currentCoc));
 						}
-						if( abs(tempCoc2 - currentCoc) <= 1 &&  tempIsFore2 == currentIsFore)
+						if( abs(tempCoc2 - currentCoc) <= 1 &&  tempIsFore2 == currentIsFore && abs(tempDepth2 - currentDepth) <= maxDistance)
 						{
 							result2 = color42;// * fract(1.0-(tempFloatCoc2 - currentCoc));
 						}
 					}
 					else if(currentCoc2 * currentIsFore2 == i)
 					{
-						if( abs(tempCoc - currentCoc2) <= 1 &&  tempIsFore == currentIsFore2)
+						if( abs(tempCoc - currentCoc2) <= 1 &&  tempIsFore == currentIsFore2 && abs(tempDepth - currentDepth2) <= maxDistance2)
 						{
 							result = color4;//*fract(1.0-(tempFloatCoc - currentCoc2));
 						}
-						if( abs(tempCoc2 - currentCoc2) <= 1 &&  tempIsFore2 == currentIsFore2)
+						if( abs(tempCoc2 - currentCoc2) <= 1 &&  tempIsFore2 == currentIsFore2 && abs(tempDepth2 - currentDepth2) <= maxDistance2)
 						{
 							result2 = color42;//*fract(1.0-(tempFloatCoc2 - currentCoc));
 						}

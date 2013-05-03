@@ -58,7 +58,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 {
                     UpdateFrame(GetElapsedTimeInSeconds());
                     DrawFrame();
-					//RenderAccumulationBuffer();
+//					RenderAccumulationBuffer();
                     SwapBuffers(g_hDC);
                 }
                 else
@@ -1413,15 +1413,15 @@ void UpdateFrameRate(float elapsedTimeSec)
 
 void BuildShaders()
 {
-	g_shaderAverageInit.attachVertexShader(SHADER_PATH "shade_vertex.glsl");
-	g_shaderAverageInit.attachVertexShader(SHADER_PATH "wavg_init_vertex.glsl");
-	g_shaderAverageInit.attachFragmentShader(SHADER_PATH "shade_fragment.glsl");
-	g_shaderAverageInit.attachFragmentShader(SHADER_PATH "wavg_init_fragment.glsl");
-	g_shaderAverageInit.link();
+	//g_shaderAverageInit.attachVertexShader(SHADER_PATH "shade_vertex.glsl");
+	//g_shaderAverageInit.attachVertexShader(SHADER_PATH "wavg_init_vertex.glsl");
+	//g_shaderAverageInit.attachFragmentShader(SHADER_PATH "shade_fragment.glsl");
+	//g_shaderAverageInit.attachFragmentShader(SHADER_PATH "wavg_init_fragment.glsl");
+	//g_shaderAverageInit.link();
 
-	g_shaderAverageFinal.attachVertexShader(SHADER_PATH "wavg_final_vertex.glsl");
-	g_shaderAverageFinal.attachFragmentShader(SHADER_PATH "wavg_final_fragment.glsl");
-	g_shaderAverageFinal.link();
+	//g_shaderAverageFinal.attachVertexShader(SHADER_PATH "wavg_final_vertex.glsl");
+	//g_shaderAverageFinal.attachFragmentShader(SHADER_PATH "wavg_final_fragment.glsl");
+	//g_shaderAverageFinal.link();
 /////////////////////////////////////////////////////
 	g_shaderFrontInit.attachVertexShader(SHADER_PATH "shade_vertex.glsl");
 	g_shaderFrontInit.attachVertexShader(SHADER_PATH "fp_init_vertex.glsl");
@@ -1445,6 +1445,7 @@ void BuildShaders()
 
 	g_shaderFrontFinal.attachVertexShader(SHADER_PATH "fp_final_vertex.glsl");
 	g_shaderFrontFinal.attachFragmentShader(SHADER_PATH "fp_common_variables.glsl");
+	g_shaderFrontFinal.attachFragmentShader(SHADER_PATH "fp_coc_common.glsl");
 	g_shaderFrontFinal.attachFragmentShader(SHADER_PATH "fp_final_fragment_new.glsl");
 //	g_shaderFrontFinal.attachFragmentShader(SHADER_PATH "fp_filters_fragment.glsl");
 	g_shaderFrontFinal.link();
@@ -1811,13 +1812,13 @@ void RenderAccumulationBuffer()
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	glClear(GL_ACCUM_BUFFER_BIT);
-	for (jitter = 0; jitter < 66; jitter++) {
+	for (jitter = 0; jitter < 256; jitter++) {
 		glClearColor(g_skyColor[0], g_skyColor[1], g_skyColor[2], 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		AccuBuffer::accPerspective(CAMERA_FOVY, 
 			(GLdouble) viewport[2]/(GLdouble) viewport[3], 
 			CAMERA_ZNEAR, CAMERA_ZFAR, 0.0, 0.0,
-			0.1*j66[jitter].x, 0.1*j66[jitter].y, 3.0);
+			0.3*j256[jitter].x, 0.3*j256[jitter].y, 3.0);
 		//glTranslatef (g_cameraPos[0], g_cameraPos[1], g_cameraPos[2]);
 		AccuBuffer::gluLookAt(g_cameraPos[0], g_cameraPos[1], g_cameraPos[2],
 			      g_targetPos[0], g_targetPos[1], g_targetPos[2],
@@ -1825,7 +1826,7 @@ void RenderAccumulationBuffer()
 		glRotatef(g_pitch, 1.0f, 0.0f, 0.0f);
 		glRotatef(g_heading, 0.0f, 1.0f, 0.0f);
 		DrawModel(-1);
-		glAccum(GL_ACCUM, 1.0/66);
+		glAccum(GL_ACCUM, 1.0/256);
 	}
 	glAccum(GL_RETURN, 1.0);
 	glFlush();

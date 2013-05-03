@@ -1,2 +1,2 @@
-float MaxOutputDCoC = 11.9;
+float MaxOutputDCoC = 11.0;
 float ClearCoc = 2;
