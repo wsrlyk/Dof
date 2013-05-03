@@ -5,7 +5,7 @@ uniform float zNear;
 float CalculateDCoC(float focus_z, float z)
 {
    //单位都是cm
-   float D=30.0f;
+   float D=10.0f;
    float f=1.1f;
    float a = z - f;
    if(abs(a)<0.00001)
@@ -23,7 +23,7 @@ float CalculateDCoC(float focus_z, float z)
 
 float CalculateDepthFromCoC(float focus_z, int coc)
 {
-	float D=30.0f;
+	float D=10.0f;
 	float f=1.1f;
 	float depth = focus_z * f * (coc + D) / (coc * focus_z + D * f);
 	if(depth < 0)

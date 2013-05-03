@@ -29,10 +29,10 @@ void main(void)
 	int currentCoc = int(currentFloatCoc);
 	float currentFloatCoc2 = CocAndDepth.b;
 	int currentCoc2 = int(currentFloatCoc2);
-//	gl_FragColor = textureRect(scene2, gl_FragCoord.xy);
+	gl_FragColor = textureRect(scene, gl_FragCoord.xy);
 //	gl_FragColor =  vec4(currentCoc / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
 //	  gl_FragColor =  vec4(currentDepth / 10, currentDepth / 50, currentDepth / 50,1);														// œ‘ æ…Ó∂»Õº
-//	return;
+	return;
 
 	int currentIsFore = currentDepth - focusDepth < 0 ? -1: 1;
 	int currentIsFore2 = currentDepth2 - focusDepth < 0 ? -1: 1;
