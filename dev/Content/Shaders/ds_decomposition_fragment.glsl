@@ -32,7 +32,7 @@ void main()
 	}
 	z[0] = 0.0f;
 	z[1] = 0.0f;
-	z[Klayers - 2 + ZOFFSET] = 190.0f;
+//	z[Klayers - 2 + ZOFFSET] = 190.0f;
 	z[Klayers - 1 + ZOFFSET] = 210.0f;
 	z[Klayers + ZOFFSET] = 230.0f;
 

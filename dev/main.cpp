@@ -347,8 +347,8 @@ void DrawFrame()
 //    else
 //        DrawModelUsingFixedFuncPipeline();
 //	RenderAverageColors();
-//	RenderFrontToBackPeeling();
-	RenderDavidSchedl();
+	RenderFrontToBackPeeling();
+//	RenderDavidSchedl();
 }
 
 void DrawModelUsingFixedFuncPipeline()
