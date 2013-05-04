@@ -33,9 +33,11 @@ void main(void)
 	float frontRealDepth = getRealZ(frontDepth);
 	float focusDepth = getRealZ(textureRect(DepthTex, vec2(focusX, focusY)).r);
 	if((frontRealDepth - focusDepth) * (currentRealDepth - focusDepth) >0
-	 && abs(int(CalculateDCoC(focusDepth, currentRealDepth)) - int(CalculateDCoC(focusDepth, frontRealDepth))) <= 0)
+	 && abs(int(CalculateDCoC(focusDepth, currentRealDepth)) - int(CalculateDCoC(focusDepth, frontRealDepth))) <= 1)
 		discard;
 
+	// beautiworld		cut = 1;
+	// keting				cut = 0;
 
 	// Shade all the fragments behind the z-buffer
 	vec4 color = ShadeFragment();

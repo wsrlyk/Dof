@@ -30,17 +30,20 @@ void main(void)
 	float currentFloatCoc2 = CocAndDepth.b;
 	int currentCoc2 = int(currentFloatCoc2);
 //	gl_FragColor = textureRect(scene, gl_FragCoord.xy);
-//	gl_FragColor =  vec4(currentCoc / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
+//	gl_FragColor =  vec4(abs(currentCoc2) / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
 //	  gl_FragColor =  vec4(currentDepth / 10, 0,0,1);														// 显示深度图
 //	return;
 
-	int currentIsFore = currentDepth - focusDepth < 0 ? -1: 1;
-	int currentIsFore2 = currentDepth2 - focusDepth < 0 ? -1: 1;
+//	int currentIsFore = currentDepth - focusDepth < 0 ? -1: 1;
+//	int currentIsFore2 = currentDepth2 - focusDepth < 0 ? -1: 1;
 
-	float maxDistance = 2*(CalculateDepthFromCoC(focusDepth, -currentCoc * currentIsFore) 
-									-  CalculateDepthFromCoC(focusDepth, -currentCoc * currentIsFore+1));
-	float maxDistance2 = CalculateDepthFromCoC(focusDepth, -currentCoc2 * currentIsFore2-1) 
-									-  CalculateDepthFromCoC(focusDepth, -currentCoc2 * currentIsFore2);
+	// keting:
+	//float maxDistance = 2*(CalculateDepthFromCoC(focusDepth, -currentCoc) 
+	//								-  CalculateDepthFromCoC(focusDepth, -currentCoc+1));
+	float maxDistance = 2*(CalculateDepthFromCoC(focusDepth, -currentCoc-1) 
+									-  CalculateDepthFromCoC(focusDepth, -currentCoc));
+	float maxDistance2 = 2*(CalculateDepthFromCoC(focusDepth, -currentCoc2-1) 
+									-  CalculateDepthFromCoC(focusDepth, -currentCoc2));
 //	  gl_FragColor =  vec4(maxDistance / 1, 1, 1,1);														// 显示深度图
 //	return;
 
@@ -100,14 +103,14 @@ void main(void)
 					vec4 result = vec4(0,0,0,0);
 					vec4 result2 = vec4(0,0,0,0);
 
-					tempIsFore = tempDepth - focusDepth < 0 ? -1: 1;
-					tempIsFore2 = tempDepth2 - focusDepth < 0 ? -1: 1;
+		//			tempIsFore = tempDepth - focusDepth < 0 ? -1: 1;
+		//			tempIsFore2 = tempDepth2 - focusDepth < 0 ? -1: 1;
 
 					// add temp to current if they are similar
 					
-					if(currentCoc * currentIsFore == i)
+					if(currentCoc == i)
 					{
-						if( abs(tempCoc - currentCoc) <=2 &&  tempIsFore == currentIsFore && abs(tempDepth - currentDepth) <= maxDistance)
+						if( abs(tempCoc - currentCoc) <=1 && abs(tempDepth - currentDepth) <= maxDistance)
 						{
 							result = color4;// * (1.0 - abs(tempDepth - currentDepth) / maxDistance) ;
 						}
@@ -116,24 +119,24 @@ void main(void)
 						//	result2 = color42;// * fract(1.0-(tempFloatCoc2 - currentCoc));
 						//}
 					}
-					else if(currentCoc2 * currentIsFore2 == i)
+					else if(currentCoc2 == i)
 					{
 						//if( abs(tempCoc - currentCoc2) == 1 &&  tempIsFore == currentIsFore2 && abs(tempDepth - currentDepth2) <= maxDistance2)
 						//{
 						//	result = color4;//*fract(1.0-(tempFloatCoc - currentCoc2));
 						//}
-						if( abs(tempCoc2 - currentCoc2) == 1 &&  tempIsFore2 == currentIsFore2 && abs(tempDepth2 - currentDepth2) <= maxDistance2)
+						if( abs(tempCoc2 - currentCoc2) <= 1 && abs(tempDepth2 - currentDepth2) <= maxDistance2)
 						{
 							result2 = color42;//*fract(1.0-(tempFloatCoc2 - currentCoc));
 						}
 					}
 					
-					if(tempCoc * tempIsFore == i)
+					if(tempCoc == i)
 					{
 						result = color4;
 					}	// end if
 
-					if(tempCoc2 * tempIsFore2 == i /*&& tempCoc2 != largerCoc/* && tempCoc2 > tmpXYx2.x && tempCoc2 > tmpXYx2.y*/)
+					if(tempCoc2 == i /*&& tempCoc2 != largerCoc/* && tempCoc2 > tmpXYx2.x && tempCoc2 > tmpXYx2.y*/)
 					{
 						result2 = color42;
 					}	// end if

@@ -11,7 +11,7 @@ uniform float height;
 void main()
 {
 //	gl_FragColor = texture2DArray(layerArray, vec3(gl_FragCoord.xy, 0));
-//	gl_FragColor = texture2DArray(layerArray, vec3(gl_FragCoord.x/width, gl_FragCoord.y/height, 19));
+//	gl_FragColor = texture2DArray(layerArray, vec3(gl_FragCoord.x/width, gl_FragCoord.y/height, 2));
 //	return;
 
 	vec4 result = vec4(0, 0, 0, 0);

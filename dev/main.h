@@ -132,6 +132,8 @@ HINSTANCE           g_hInstance;
 int                 g_framesPerSecond;
 float                 g_windowWidth;
 float                 g_windowHeight;
+float					g_windowWidthRate = 0.5;
+float					g_windowHeightRate = 0.5;
 int                 g_msaaSamples;
 GLuint              g_nullTexture;
 GLuint              g_blinnPhongShader;
@@ -146,13 +148,21 @@ float				g_clickPosX = 292;//512;//331;//413;
 float				g_clickPosY = 259;//147;//194;//119;
 */
 /*			keting
-*/
 float               g_heading = -338;//-153.3;//-48;
 float               g_pitch = -2.4;//1.8;//29;
 float               g_cameraPos[3] = {-0.32, 0.11, 0.66};
 float               g_targetPos[3] = {-0.32, 0.11,0};//{-0.835, -0.145, 0};
 float				g_clickPosX = 185;//512;//331;//413;
 float				g_clickPosY = 143;//147;//194;//119;
+*/
+/*			beautiworld
+*/
+float               g_heading = -153.3;//-48;
+float               g_pitch = 1.8;//29;
+float               g_cameraPos[3] = {-0.61,-0.19,3.78};//{-0.835, -0.145, 3.78};
+float               g_targetPos[3] = {-0.61,-0.19,0};//{-0.835, -0.145, 0};
+float				g_clickPosX = 282;//331;//413;
+float				g_clickPosY = 206;//194;//119;
 
 bool                g_isFullScreen;
 bool                g_hasFocus;

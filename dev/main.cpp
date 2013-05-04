@@ -279,8 +279,8 @@ HWND CreateAppWindow(const WNDCLASSEX &wcl, const char *pszTitle)
     {
         int screenWidth = GetSystemMetrics(SM_CXSCREEN);
         int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-		g_windowWidth = screenWidth *  1/ 2;
-		g_windowHeight = screenHeight *1 / 2;
+		g_windowWidth = screenWidth *  g_windowWidthRate;
+		g_windowHeight = screenHeight *g_windowHeightRate;
 		int left = (screenWidth - g_windowWidth) / 2;
 		int top = (screenHeight - g_windowHeight) / 2;
 		RECT rc = {0};
@@ -1400,11 +1400,15 @@ void UpdateFrameRate(float elapsedTimeSec)
 
     if (accumTimeSec > 1.0f)
     {
-        g_framesPerSecond = frames;
+		char result[128];
+		sprintf(result, "FPS: %f", frames / accumTimeSec);
+		SetWindowText(g_hWnd, result);
+
+		g_framesPerSecond = frames;
 
         frames = 0;
         accumTimeSec = 0.0f;
-		printf("FPS: %d", g_framesPerSecond);
+
     }
     else
     {
@@ -1809,6 +1813,10 @@ void RenderAverageColors()
 
 void RenderAccumulationBuffer()
 {
+	/*		beautiworld*/
+	float focusDepth = 3.5;
+	float D = 0.12;
+	
 	int jitter;
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -1819,7 +1827,7 @@ void RenderAccumulationBuffer()
 		AccuBuffer::accPerspective(CAMERA_FOVY, 
 			(GLdouble) viewport[2]/(GLdouble) viewport[3], 
 			CAMERA_ZNEAR, CAMERA_ZFAR, 0.0, 0.0,
-			0.3*j256[jitter].x, 0.3*j256[jitter].y, 3.0);
+			D*j256[jitter].x, D*j256[jitter].y, focusDepth);
 		//glTranslatef (g_cameraPos[0], g_cameraPos[1], g_cameraPos[2]);
 		AccuBuffer::gluLookAt(g_cameraPos[0], g_cameraPos[1], g_cameraPos[2],
 			      g_targetPos[0], g_targetPos[1], g_targetPos[2],
