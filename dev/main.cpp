@@ -1813,10 +1813,19 @@ void RenderAverageColors()
 
 void RenderAccumulationBuffer()
 {
-	/*		beautiworld*/
+	/*		beautiworld
 	float focusDepth = 3.5;
 	float D = 0.12;
-	
+	*/
+	/*		hotel
+	float focusDepth = 1.6;
+	float D = 0.035;
+	*/
+
+	/*		keting*/
+	float focusDepth = 1.1;
+	float D = 0.03;
+
 	int jitter;
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);

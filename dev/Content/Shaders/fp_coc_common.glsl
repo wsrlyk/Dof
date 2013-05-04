@@ -3,13 +3,19 @@ uniform float zFar;
 uniform float zNear;
 
 /* keting
+*/
 float D=60.0f;
 float f=0.2f;
-*/
 
-/* beauti*/
+/* beauti
 float D=30.0f;
 float f=1.1f;
+*/
+
+/* hotel
+float D=10.0f;
+float f=1.2f;
+*/
 
 
 float CalculateDCoC(float focus_z, float z)

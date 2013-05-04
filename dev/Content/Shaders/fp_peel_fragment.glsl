@@ -38,6 +38,7 @@ void main(void)
 
 	// beautiworld		cut = 1;
 	// keting				cut = 0;
+	// hotel					cut = 1;
 
 	// Shade all the fragments behind the z-buffer
 	vec4 color = ShadeFragment();

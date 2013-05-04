@@ -30,7 +30,7 @@ void main(void)
 	float currentFloatCoc2 = CocAndDepth.b;
 	int currentCoc2 = int(currentFloatCoc2);
 //	gl_FragColor = textureRect(scene, gl_FragCoord.xy);
-//	gl_FragColor =  vec4(abs(currentCoc2) / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
+//	gl_FragColor =  vec4(abs(currentCoc) / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
 //	  gl_FragColor =  vec4(currentDepth / 10, 0,0,1);														// 显示深度图
 //	return;
 
@@ -38,10 +38,14 @@ void main(void)
 //	int currentIsFore2 = currentDepth2 - focusDepth < 0 ? -1: 1;
 
 	// keting:
+	float maxDistance = 2*(CalculateDepthFromCoC(focusDepth, -currentCoc) 
+									-  CalculateDepthFromCoC(focusDepth, -currentCoc+1));
+	// beauti
+	//float maxDistance = 1*(CalculateDepthFromCoC(focusDepth, -currentCoc-1) 
+	//								-  CalculateDepthFromCoC(focusDepth, -currentCoc));
+	// hotel
 	//float maxDistance = 2*(CalculateDepthFromCoC(focusDepth, -currentCoc) 
 	//								-  CalculateDepthFromCoC(focusDepth, -currentCoc+1));
-	float maxDistance = 2*(CalculateDepthFromCoC(focusDepth, -currentCoc-1) 
-									-  CalculateDepthFromCoC(focusDepth, -currentCoc));
 	float maxDistance2 = 2*(CalculateDepthFromCoC(focusDepth, -currentCoc2-1) 
 									-  CalculateDepthFromCoC(focusDepth, -currentCoc2));
 //	  gl_FragColor =  vec4(maxDistance / 1, 1, 1,1);														// 显示深度图
@@ -51,7 +55,6 @@ void main(void)
 	float mean, zeta = 0;
 	float depth;
 	vec2 tmpXY;
-	vec2 tmpXYx2;
 
 	int tempCoc;
 	float tempFloatCoc;
@@ -89,14 +92,11 @@ void main(void)
 				{
 					tmpXY = vec2(gl_FragCoord.x+col, gl_FragCoord.y + row);
 					CocAndDepth = textureRect(CocAndDepthMap, tmpXY);
-					tempFloatCoc = CocAndDepth.r;
-					tempCoc = int(tempFloatCoc);
+					tempCoc = int(CocAndDepth.r);
 					tempDepth = CocAndDepth.g;
-					tempFloatCoc2 = CocAndDepth.b;
-					tempCoc2 = int(tempFloatCoc2);
+					tempCoc2 = int(CocAndDepth.b);
 					tempDepth2 = CocAndDepth.a;
 
-					tmpXYx2 = vec2(abs(col) * 2, abs(row) * 2);
 					vec4 color4 = vec4(textureRect(scene, tmpXY).rgb, 1.0);
 					vec4 color42 = vec4(textureRect(scene2, tmpXY).rgb, 1.0);
 
@@ -110,18 +110,18 @@ void main(void)
 					
 					if(currentCoc == i)
 					{
-						if( abs(tempCoc - currentCoc) <=1 && abs(tempDepth - currentDepth) <= maxDistance)
+						if( abs(tempCoc - currentCoc) <=2 && abs(tempDepth - currentDepth) <= maxDistance)
 						{
 							result = color4;// * (1.0 - abs(tempDepth - currentDepth) / maxDistance) ;
 						}
-						//if( abs(tempCoc2 - currentCoc) == 1 &&  tempIsFore2 == currentIsFore && abs(tempDepth2 - currentDepth) <= maxDistance)
+						//if( abs(tempCoc2 - currentCoc) == 1 && abs(tempDepth2 - currentDepth) <= maxDistance)
 						//{
 						//	result2 = color42;// * fract(1.0-(tempFloatCoc2 - currentCoc));
 						//}
 					}
 					else if(currentCoc2 == i)
 					{
-						//if( abs(tempCoc - currentCoc2) == 1 &&  tempIsFore == currentIsFore2 && abs(tempDepth - currentDepth2) <= maxDistance2)
+						//if( abs(tempCoc - currentCoc2) == 1 && abs(tempDepth - currentDepth2) <= maxDistance2)
 						//{
 						//	result = color4;//*fract(1.0-(tempFloatCoc - currentCoc2));
 						//}
