@@ -1404,6 +1404,7 @@ void UpdateFrameRate(float elapsedTimeSec)
 
         frames = 0;
         accumTimeSec = 0.0f;
+		printf("FPS: %d", g_framesPerSecond);
     }
     else
     {

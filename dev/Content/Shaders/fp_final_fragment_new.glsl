@@ -29,16 +29,16 @@ void main(void)
 	int currentCoc = int(currentFloatCoc);
 	float currentFloatCoc2 = CocAndDepth.b;
 	int currentCoc2 = int(currentFloatCoc2);
-	gl_FragColor = textureRect(scene, gl_FragCoord.xy);
+//	gl_FragColor = textureRect(scene, gl_FragCoord.xy);
 //	gl_FragColor =  vec4(currentCoc / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
-//	  gl_FragColor =  vec4(currentDepth / 10, currentDepth / 50, currentDepth / 50,1);														// 显示深度图
-	return;
+//	  gl_FragColor =  vec4(currentDepth / 10, 0,0,1);														// 显示深度图
+//	return;
 
 	int currentIsFore = currentDepth - focusDepth < 0 ? -1: 1;
 	int currentIsFore2 = currentDepth2 - focusDepth < 0 ? -1: 1;
 
-	float maxDistance = 3*CalculateDepthFromCoC(focusDepth, -currentCoc * currentIsFore-1) 
-									-  CalculateDepthFromCoC(focusDepth, -currentCoc * currentIsFore);
+	float maxDistance = 2*(CalculateDepthFromCoC(focusDepth, -currentCoc * currentIsFore) 
+									-  CalculateDepthFromCoC(focusDepth, -currentCoc * currentIsFore+1));
 	float maxDistance2 = CalculateDepthFromCoC(focusDepth, -currentCoc2 * currentIsFore2-1) 
 									-  CalculateDepthFromCoC(focusDepth, -currentCoc2 * currentIsFore2);
 //	  gl_FragColor =  vec4(maxDistance / 1, 1, 1,1);														// 显示深度图
@@ -107,22 +107,22 @@ void main(void)
 					
 					if(currentCoc * currentIsFore == i)
 					{
-						if( abs(tempCoc - currentCoc) <= 1 &&  tempIsFore == currentIsFore && abs(tempDepth - currentDepth) <= maxDistance)
+						if( abs(tempCoc - currentCoc) <=2 &&  tempIsFore == currentIsFore && abs(tempDepth - currentDepth) <= maxDistance)
 						{
-							result = color4;// * fract(1.0-(tempFloatCoc - currentCoc));
+							result = color4;// * (1.0 - abs(tempDepth - currentDepth) / maxDistance) ;
 						}
-						if( abs(tempCoc2 - currentCoc) <= 1 &&  tempIsFore2 == currentIsFore && abs(tempDepth2 - currentDepth) <= maxDistance)
-						{
-							result2 = color42;// * fract(1.0-(tempFloatCoc2 - currentCoc));
-						}
+						//if( abs(tempCoc2 - currentCoc) == 1 &&  tempIsFore2 == currentIsFore && abs(tempDepth2 - currentDepth) <= maxDistance)
+						//{
+						//	result2 = color42;// * fract(1.0-(tempFloatCoc2 - currentCoc));
+						//}
 					}
 					else if(currentCoc2 * currentIsFore2 == i)
 					{
-						if( abs(tempCoc - currentCoc2) <= 1 &&  tempIsFore == currentIsFore2 && abs(tempDepth - currentDepth2) <= maxDistance2)
-						{
-							result = color4;//*fract(1.0-(tempFloatCoc - currentCoc2));
-						}
-						if( abs(tempCoc2 - currentCoc2) <= 1 &&  tempIsFore2 == currentIsFore2 && abs(tempDepth2 - currentDepth2) <= maxDistance2)
+						//if( abs(tempCoc - currentCoc2) == 1 &&  tempIsFore == currentIsFore2 && abs(tempDepth - currentDepth2) <= maxDistance2)
+						//{
+						//	result = color4;//*fract(1.0-(tempFloatCoc - currentCoc2));
+						//}
+						if( abs(tempCoc2 - currentCoc2) == 1 &&  tempIsFore2 == currentIsFore2 && abs(tempDepth2 - currentDepth2) <= maxDistance2)
 						{
 							result2 = color42;//*fract(1.0-(tempFloatCoc2 - currentCoc));
 						}
@@ -138,11 +138,13 @@ void main(void)
 						result2 = color42;
 					}	// end if
 
-					result2.a = result.a + result2.a - result.a * result2.a;
-					if(result2.a > 0)
-					{
-						result2.rgb = result2.rgb + (result.rgb - result2.rgb) * result.a / result2.a;
-					}
+					//result2.a = result.a + result2.a - result.a * result2.a;
+					//if(result2.a > 0)
+					//{
+					//	result2.rgb = result2.rgb + (result.rgb - result2.rgb) * result.a / result2.a;
+					//}
+					if(result.a > 0)
+						result2 = result;
 					buffer += result2;
 				}	//end for row
 			}	//end for col
