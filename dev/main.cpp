@@ -57,8 +57,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 if (g_hasFocus)
                 {
                     UpdateFrame(GetElapsedTimeInSeconds());
-                    DrawFrame();
-//					RenderAccumulationBuffer();
+//                    DrawFrame();
+					RenderAccumulationBuffer();
                     SwapBuffers(g_hDC);
                 }
                 else
@@ -1398,7 +1398,7 @@ void UpdateFrameRate(float elapsedTimeSec)
 
     accumTimeSec += elapsedTimeSec;
 
-    if (accumTimeSec > 1.0f)
+    if (accumTimeSec > 1.0f && frames > 0 )
     {
 		char result[128];
 		sprintf(result, "FPS: %f", frames / accumTimeSec);

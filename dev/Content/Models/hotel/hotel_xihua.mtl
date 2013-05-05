@@ -1,0 +1,92 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# 创建的文件:05.05.2013 18:08:18
+
+newmtl wall
+	Ns 30.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5500 0.5500 0.5500
+	Kd 0.5500 0.5500 0.5500
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\wall\wall_diff.tga
+	map_Kd D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\wall\wall_diff.tga
+	map_Ks D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\wall\wall_spec.tga
+
+newmtl gate
+	Ns 30.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5500 0.5500 0.5500
+	Kd 0.5500 0.5500 0.5500
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\gate\gate_diff.tga
+	map_Kd D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\gate\gate_diff.tga
+	map_Ks D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\gate\gate_spec.tga
+
+newmtl defaultMat
+	Ns 30.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5500 0.5500 0.5500
+	Kd 0.5500 0.5500 0.5500
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\bus_station\bus_station_diff.tga
+	map_Kd D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\bus_station\bus_station_diff.tga
+	map_Ks D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\bus_station\bus_station_spec.tga
+
+newmtl 03___Default__Object02_
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\build\build_diff.tga
+	map_Kd D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\build\build_diff.tga
+	map_Ks D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\build\build_spec.tga
+
+newmtl 09___Default
+	Ns 40.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5882 0.5882 0.5882
+	Kd 0.5882 0.5882 0.5882
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\ground\GroundB_Diff.tga
+	map_Kd D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\ground\GroundB_Diff.tga
+	map_Ks D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\ground\GroundB_Spec.tga
+
+newmtl 21___Default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5882 0.5882 0.5882
+	Kd 0.5882 0.5882 0.5882
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\ground\groundA_Diff.tga
+	map_Kd D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\ground\groundA_Diff.tga
+	map_Ks D:\53\53 项目\深度场\models\模型+贴图\贴图\场景贴图\ground\GroundA_Spec.tga
