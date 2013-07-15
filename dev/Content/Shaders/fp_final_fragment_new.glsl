@@ -29,10 +29,10 @@ void main(void)
 	int currentCoc = int(currentFloatCoc);
 	float currentFloatCoc2 = CocAndDepth.b;
 	int currentCoc2 = int(currentFloatCoc2);
-//	gl_FragColor = textureRect(scene, gl_FragCoord.xy);
-//	gl_FragColor =  vec4(abs(currentCoc) / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
+//	gl_FragColor = textureRect(scene2, gl_FragCoord.xy);
+	gl_FragColor =  vec4(abs(currentCoc) / 11.0, 0.25, 0.75,0);//*/FocusBlur(MaxOutputDCoC, fd, 15);//textureRect(scene, gl_FragCoord.xy);//smoothBlur(vec2(width,height), fd*MaxDistance, 100);
 //	  gl_FragColor =  vec4(currentDepth / 10, 0,0,1);														// œ‘ æ…Ó∂»Õº
-//	return;
+	return;
 
 //	int currentIsFore = currentDepth - focusDepth < 0 ? -1: 1;
 //	int currentIsFore2 = currentDepth2 - focusDepth < 0 ? -1: 1;
@@ -110,36 +110,37 @@ void main(void)
 					
 					if(currentCoc == i)
 					{
-						if( abs(tempCoc - currentCoc) <=2 && abs(tempDepth - currentDepth) <= maxDistance)
+						if( abs(tempCoc - currentCoc) <=2 )//&& abs(tempDepth - currentDepth) <= maxDistance)
 						{
 							result = color4;// * (1.0 - abs(tempDepth - currentDepth) / maxDistance) ;
 						}
-						//if( abs(tempCoc2 - currentCoc) == 1 && abs(tempDepth2 - currentDepth) <= maxDistance)
-						//{
-						//	result2 = color42;// * fract(1.0-(tempFloatCoc2 - currentCoc));
-						//}
+						if( abs(tempCoc2 - currentCoc) <=1)// && abs(tempDepth2 - currentDepth) <= maxDistance)
+						{
+							result2 = color42;// * fract(1.0-(tempFloatCoc2 - currentCoc));
+						}
 					}
 					else if(currentCoc2 == i)
 					{
-						//if( abs(tempCoc - currentCoc2) == 1 && abs(tempDepth - currentDepth2) <= maxDistance2)
-						//{
-						//	result = color4;//*fract(1.0-(tempFloatCoc - currentCoc2));
-						//}
-						if( abs(tempCoc2 - currentCoc2) <= 1 && abs(tempDepth2 - currentDepth2) <= maxDistance2)
+						if( abs(tempCoc - currentCoc2) <= 1)// && abs(tempDepth - currentDepth2) <= maxDistance2)
+						{
+							result = color4;//*fract(1.0-(tempFloatCoc - currentCoc2));
+						}
+						if( abs(tempCoc2 - currentCoc2) <= 1)// && abs(tempDepth2 - currentDepth2) <= maxDistance2)
 						{
 							result2 = color42;//*fract(1.0-(tempFloatCoc2 - currentCoc));
 						}
 					}
 					
+					if(tempCoc2 == i /*&& tempCoc2 != largerCoc/* && tempCoc2 > tmpXYx2.x && tempCoc2 > tmpXYx2.y*/)
+					{
+						result = color42;
+					}	// end if
+
 					if(tempCoc == i)
 					{
 						result = color4;
 					}	// end if
 
-					if(tempCoc2 == i /*&& tempCoc2 != largerCoc/* && tempCoc2 > tmpXYx2.x && tempCoc2 > tmpXYx2.y*/)
-					{
-						result2 = color42;
-					}	// end if
 
 					//result2.a = result.a + result2.a - result.a * result2.a;
 					//if(result2.a > 0)

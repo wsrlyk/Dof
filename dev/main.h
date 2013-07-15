@@ -148,21 +148,21 @@ float				g_clickPosX = 412;//512;//331;//413;
 float				g_clickPosY = 166;//147;//194;//119;
 */
 /*			keting
-*/
 float               g_heading = -338;//-153.3;//-48;
 float               g_pitch = -2.4;//1.8;//29;
 float               g_cameraPos[3] = {-0.32, 0.11, 0.66};
 float               g_targetPos[3] = {-0.32, 0.11,0};//{-0.835, -0.145, 0};
 float				g_clickPosX = 185;//512;//331;//413;
 float				g_clickPosY = 143;//147;//194;//119;
+*/
 /*			beautiworld
+*/
 float               g_heading = -153.3;//-48;
 float               g_pitch = 1.8;//29;
 float               g_cameraPos[3] = {-0.61,-0.19,3.78};//{-0.835, -0.145, 3.78};
 float               g_targetPos[3] = {-0.61,-0.19,0};//{-0.835, -0.145, 0};
 float				g_clickPosX = 282;//331;//413;
 float				g_clickPosY = 206;//194;//119;
-*/
 
 bool                g_isFullScreen;
 bool                g_hasFocus;
@@ -171,8 +171,8 @@ bool                g_enableTextures = true;
 bool                g_supportsProgrammablePipeline;
 bool                g_cullBackFaces = true;
 
-//float				g_skyColor[3] = {0.48, 0.64, 0.96};
-float				g_skyColor[3] = {0.86, 0.86, 0.84};
+float				g_skyColor[3] = {0.48, 0.64, 0.96};
+//float				g_skyColor[3] = {0.86, 0.86, 0.84};
 bool				g_click = false;
 ModelOBJ            g_model;
 ModelTextures       g_modelTextures;

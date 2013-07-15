@@ -33,7 +33,7 @@ void main(void)
 	float frontRealDepth = getRealZ(frontDepth);
 	float focusDepth = getRealZ(textureRect(DepthTex, vec2(focusX, focusY)).r);
 	if((frontRealDepth - focusDepth) * (currentRealDepth - focusDepth) >0
-	 && abs(int(CalculateDCoC(focusDepth, currentRealDepth)) - int(CalculateDCoC(focusDepth, frontRealDepth))) <= 1)
+	 && abs(int(CalculateDCoC(focusDepth, currentRealDepth)) - int(CalculateDCoC(focusDepth, frontRealDepth))) <= 0)
 		discard;
 
 	// beautiworld		cut = 1;

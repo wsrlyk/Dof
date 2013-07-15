@@ -57,8 +57,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 if (g_hasFocus)
                 {
                     UpdateFrame(GetElapsedTimeInSeconds());
-//                    DrawFrame();
-					RenderAccumulationBuffer();
+                    DrawFrame();
+//					RenderAccumulationBuffer();
                     SwapBuffers(g_hDC);
                 }
                 else
